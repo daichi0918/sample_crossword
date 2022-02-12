@@ -1,0 +1,62 @@
+{% load static %}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" 
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" 
+    href="{% static 'quiz/css/style.css' %}" />
+</head>
+<body class="container">
+    <h1 class="display-4 text-primary mt-4 mb-4">{{title}}</h1>
+    <p class="h5 mt-4 mb-4">{{level}}</p>
+    <p class="h5 mt-4 mb-4">以下のクロスワードを埋めて、数字の振ってあるマスの文字を順番に入力して回答せよ</p>
+    <img src={{ quiz_img_src}} width="300" height="300" class="mt-4 mb-4">
+
+    <!-- <p>横のキーワード</p>
+    <p class="h5 mt-4 mb-4">{{horizontal}}</p>
+    <p>縦のキーワード</p>
+    <p class="h5 mt-4 mb-4">{{vertical}}</p> -->
+    <table class="table"　border="1" style="border-collapse: collapse">
+        <tr>
+            <th>縦のキーワード</th>
+            <th>横のキーワード</th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{item.vertical}}</td>
+            <td>{{item.horizontal}}</td>           
+        <tr>
+    {% endfor %}
+    </table>
+    <!-- <table class="table">
+        <tr>
+            <th>横のキーワード</th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{item.horizontal}}</td>
+        <tr>
+    {% endfor %}
+    </table> -->
+    <form action="{% url 'index' %}" method="post">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="btn btn-primary my-2" 
+            value="click" onclick="show()">
+    </form>
+    <div>
+        <h1>{{ judge }}</h1>
+        <p>回答：{{ reply }}</p>
+        <p>正解：{{ answer }}</p>
+        <!-- <img src="{% static 'quiz/img/sample_quiz_ans1.jpg'%}" width="300" height="300" class="mt-4 mb-4"> -->
+        <img src={{ answer_img_src}} width="300" height="300" class="mt-4 mb-4">
+    </div>
+    
+    <hr>
+    <script type="text/javascript" src="{% static 'quiz/js/app.js' %}"></script>
+</body>
+</html>
