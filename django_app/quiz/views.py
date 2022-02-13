@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Quiz
+from .models import Quiz,VerticalKeyword,HorizonalKeyword
 # from django.views.generic import TemplateView
 from .forms import AnswerForm
 # Create your views here.
@@ -39,37 +39,41 @@ from .forms import AnswerForm
 #         self.params['form'] = AnswerForm(request.POST)
 #         return render(request,'quiz/index.html',self.params) 
 
+
+
+
 def index(request):
-    data=Quiz.objects.all()
     params = {
         'title':'IT_Cross_Word',
         'level':'初級',
-        'horizontal':'',
-        'vertical':'',
+        'horizontal': [],
+        'vertical':[],
+        # 'select':QuizSelect(),
         'form':AnswerForm(),
         'quiz_img_src':'',
         'answer_img_src':'',
         'reply':'',
         'answer':'',
         'judge':'',
-        'data':data,
     }
-    item=Quiz.objects.get(id=1)
-    params['quiz_img_src']=item.quiz_img_src
-    params['horizontal']=item.horizontal
-    params['vertical']=item.vertical
+    quiz_item=Quiz.objects.get(id=2)
+    # h_item=[HorizonalKeyword.objects.get(quiz_id=2)]
+    params['horizontal']=HorizonalKeyword.objects.filter(quiz_id=2)
+    # v_item=VerticalKeyword.objects.get(quiz_id=2)
+    params['vertical']=VerticalKeyword.objects.filter(quiz_id=2)
+    params['quiz_img_src']=quiz_item.quiz_img_src
     if(request.method == 'POST'):
-        item = Quiz.objects.get(id=1)
+        quiz_item = Quiz.objects.get(id=2)
         ansform = request.POST['answer']
-        answer = item.answer
+        answer = quiz_item.answer
         params['form'] = AnswerForm(request.POST)
         if(ansform==answer):
-            params['answer_img_src']=item.answer_img_src
+            params['answer_img_src']=quiz_item.answer_img_src
             params['judge']='正解⭕️'
             params['answer']=answer 
             params['reply']=ansform
         else:
-            params['answer_img_src']=item.answer_img_src
+            params['answer_img_src']=quiz_item.answer_img_src
             params['judge']='不正解❌'
             params['answer']=answer
             params['reply']=ansform
